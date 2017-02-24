@@ -11,8 +11,6 @@ param(
 Set-StrictMode -Version Latest
 $script:ErrorActionPreference = "stop"
 New-Variable -Name Root -Scope Script -Value $PSScriptRoot -Force
-#$script:TemplateUrl = "https://inovativbe.blob.core.windows.net/sbstemplatedev/azuredeploy.json"
-#$script:ATPLicenseName = "ADALLOM_O365"
 
 Get-ChildItem -Path "$script:Root\Functions\" -Include '*.ps1' -Recurse |
 ForEach-Object {

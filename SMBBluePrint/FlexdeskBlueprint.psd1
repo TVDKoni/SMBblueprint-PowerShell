@@ -1,18 +1,18 @@
 @{
 
-    RootModule = 'SMBBlueprint.psm1';
+    RootModule = 'FlexdeskBlueprint.psm1';
 
     ModuleVersion = '8.0.0.1';
 
-    GUID = '83bc0698-c6b4-486a-a8e5-5e585038928d';
+    GUID = '2f47c9fb-d226-49f2-b5bf-4b6999c06644';
 
-    Author = 'Jan Van Meirvenne','Stijn Callebaut';
+    Author = 'Konrad Brunner';
 
-    CompanyName = 'Inovativ BE';
+    CompanyName = 'Trivadis Services AG';
 
-    Copyright = '(c) 2016 Inovativ BE. All rights reserved.';
+    Copyright = '(c) 2016 Inovativ BE, 2017 Trivadis Services CH. All rights reserved.';
 
-    Description = 'Deployment Framework for the Microsoft SMB Azure & O365 solution.';
+    Description = 'Deployment Framework for the Flexdesk solution.';
 
     PowerShellVersion = '3.0';
 
@@ -37,7 +37,7 @@
         # LicenseUri = ''
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/Inovativ/SMBblueprint-PowerShell'
+        ProjectUri = 'https://github.com/TVDKoni/SMBblueprint-PowerShell'
 
         # A URL to an icon representing this module.
         # IconUri = ''

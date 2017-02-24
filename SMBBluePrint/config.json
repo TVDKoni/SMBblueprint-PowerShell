@@ -1,6 +1,6 @@
 {
     "config":{
-        "TemplateURL":"https://raw.githubusercontent.com/Inovativ/SMBblueprint-ARM/master/azuredeploy.json",
+        "TemplateURL":"https://raw.githubusercontent.com/TVDKoni/SMBblueprint-ARM/master/azuredeploy.json",
         "ATPLicenseName":"ADALLOM_O365"
     }
 }
