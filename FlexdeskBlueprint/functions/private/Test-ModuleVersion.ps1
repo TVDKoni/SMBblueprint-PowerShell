@@ -5,7 +5,7 @@ function Test-ModuleVersion {
         [ValidateNotNullOrEmpty()]
         [string] $ModuleName
     )
-
+	return #TODO
     try{
         write-log -message "Checking if your $ModuleName module is up to date..."
         if($CurrentModule = (Get-Module -Name $ModuleName)){

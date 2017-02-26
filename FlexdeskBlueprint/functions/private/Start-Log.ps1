@@ -4,11 +4,11 @@ function Start-Log{
 	param(
 	[Parameter()]
 	[ValidateNotNullOrEmpty()]
-	[string] $LogName = "SMBBlueprint_$(([guid]::newguid().guid)).log"
+	[string] $LogName = "FlexdeskBlueprint_$(([guid]::newguid().guid)).log"
 	)
 	# recreates the log file and sets the script parameter for use in the write-log function
 
-	$_Log = "$env:APPDATA\SMBBlueprint\logs\$($LogName)"
+	$_Log = "$env:APPDATA\FlexdeskBlueprint\logs\$($LogName)"
 # if(Test-Path -Path $script:Log){
 #     $null=remove-item -path $script:Log -force
 		#}

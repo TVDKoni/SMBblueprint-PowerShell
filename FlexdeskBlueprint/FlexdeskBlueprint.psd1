@@ -31,7 +31,7 @@
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('SMB','Office365','Azure','AzureRM')
+        Tags = @('Flexdesk','SMB','Office365','Azure','AzureRM')
 
         # A URL to the license for this module.
         # LicenseUri = ''

@@ -35,9 +35,9 @@ function Get-XAML {
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.ColumnSpan="2" >
             <Grid.Background>
-                <SolidColorBrush Color="#FF0088FF" />
+                <SolidColorBrush Color="#95ced0" />
             </Grid.Background>
-            <TextBlock Name="Lbl_Title" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White">SMB Deployment GUI</TextBlock>
+            <TextBlock Name="Lbl_Title" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White">Flexdesk Deployment GUI</TextBlock>
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                 <Button Name="CloseButton" Height="35" Width="35" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" FontSize="14" Margin="0,0">
                     <Button.Background>
@@ -56,14 +56,19 @@ function Get-XAML {
         <Grid Grid.Row="5" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Name="HeaderLeft" />
+                <ColumnDefinition Name="HeaderCenter" />
                 <ColumnDefinition Name="HeaderRight" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0">
+                <TextBlock FontSize="5"></TextBlock>
                 <Image Name="AzureLogo" Source="D:\OneDrive - Inovativ\Projects\Microsoft\SBS\dev\GUI\src\azure.png" Stretch="Fill" HorizontalAlignment="Left" Width="150" Height="50"  />
-                <TextBlock FontSize="20">SMB Blueprint</TextBlock>
             </StackPanel>
-            <StackPanel Grid.Column="1" VerticalAlignment="Bottom">
+            <StackPanel Grid.Column="1">
+                <TextBlock FontSize="10"></TextBlock>
+                <Image Name="FlexdeskLogo" Source="D:\OneDrive - Inovativ\Projects\Microsoft\SBS\dev\GUI\src\flexdesk.png" Stretch="Fill" HorizontalAlignment="Center" Width="150" Height="50"  />
+            </StackPanel>
+            <StackPanel Grid.Column="2" VerticalAlignment="Bottom">
                 <Image Name="MicrosoftLogo" Source="D:\OneDrive - Inovativ\Projects\Microsoft\SBS\dev\GUI\src\microsoft.png" VerticalAlignment="Stretch" HorizontalAlignment="Right" Height="50" Width="300"  />
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">Powered By</TextBlock>
@@ -369,11 +374,17 @@ function Get-XAML {
                         </GroupBox>
                         <GroupBox Header="2. Scenario Selection" >
                             <Grid>
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                <StackPanel Orientation="Horizontal">
+								<StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
 
-                                    <RadioButton Name="Rad_Small" Tag="small" FontSize="20" IsChecked="True" VerticalAlignment="Center" VerticalContentAlignment="Center">Small</RadioButton>
-                                    <RadioButton Name="Rad_Medium" Tag="medium"  FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">Medium</RadioButton>
-                                    <RadioButton Name="Rad_Large" Tag="large" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" >Large</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_Small" Tag="small" FontSize="20" IsChecked="True" VerticalAlignment="Center" VerticalContentAlignment="Center">Small</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_Medium" Tag="medium"  FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">Medium</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_Large" Tag="large" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" >Large</RadioButton>
+                                </StackPanel>
+                                <StackPanel Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_XLarge" Tag="xlarge" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">Extra Large</RadioButton>
+                                </StackPanel>
                                 </StackPanel>
                                 <!--<Button Name="btn_Small" Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="100" Background="#FF0088FF" Foreground="White">Small</Button>
                             <Button Name="btn_Medium" Margin="0,60,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="100" Background="#FF277CC9" Foreground="White">Medium</Button>

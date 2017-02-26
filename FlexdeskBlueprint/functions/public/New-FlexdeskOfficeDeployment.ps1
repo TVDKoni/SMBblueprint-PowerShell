@@ -1,4 +1,4 @@
-function New-SMBOfficeDeployment {
+function New-FlexdeskOfficeDeployment {
 
 	[cmdletbinding(DefaultParameterSetName="TenantId")]
 	[OutputType([psobject])]
@@ -43,7 +43,7 @@ function New-SMBOfficeDeployment {
 		}
 		$PSDefaultParameterValues = @{"Write-Log:Log"="$Log"}
 		if(!$PSBoundParameters.ContainsKey('NoUpdateCheck')){
-		Test-ModuleVersion -ModuleName SMBBluePrint
+		Test-ModuleVersion -ModuleName FlexdeskBluePrint
 	}
 
 

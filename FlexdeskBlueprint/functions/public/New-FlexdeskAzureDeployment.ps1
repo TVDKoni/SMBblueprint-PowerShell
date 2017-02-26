@@ -1,4 +1,4 @@
-function New-SMBAzureDeployment {
+function New-FlexdeskAzureDeployment {
 	[cmdletbinding(DefaultParameterSetName="AzureTenantDomain")]
 	param(
 	[Parameter(Mandatory=$true)]
@@ -14,7 +14,7 @@ function New-SMBAzureDeployment {
 	[ValidateNotNullOrEmpty()]
 	[string] $CustomerName,
 	[parameter(Mandatory=$true)]
-	[ValidateSet('small','medium','large')]
+	[ValidateSet('small','medium','large','xlarge')]
 	[string] $CustomerSize = 'small',
 	[parameter()]
 	[ValidateSet('none','small','medium')]
@@ -52,7 +52,7 @@ function New-SMBAzureDeployment {
 	[string] $SubscriptionName,
 	[Parameter(DontShow=$true)]
 	[ValidateNotNullOrEmpty()]
-	[string] $ResourceGroupPrefix = "smb_rg_",
+	[string] $ResourceGroupPrefix = "flxd_rg_",
 	[Parameter()]
 	[switch] $NoUpdateCheck,
 	[Parameter()]
@@ -110,7 +110,7 @@ function New-SMBAzureDeployment {
 		}
 		$PSDefaultParameterValues = @{"Write-Log:Log"=$Log}
 		if(!$PSBoundParameters.ContainsKey('NoUpdateCheck')){
-			Test-ModuleVersion -ModuleName SMBBluePrint
+			Test-ModuleVersion -ModuleName FlexdeskBluePrint
 		}
 
 		$CustomerNamePrefix = [Regex]::Replace($CustomerName,'[^a-zA-Z0-9]', '')
@@ -184,10 +184,10 @@ function New-SMBAzureDeployment {
 								break
 							}
 							$title = "Automation & Monitoring Features Unsupported for this Region"
-							$message = "The selected Azure Region does not support the automation & monitoring features of the SMB Blueprint solution. In which region should they be deployed instead (by re-running this command with the -FallBackLocation Parameter you can automatically deploy non-compatible resources to a fallback region)?" 
+							$message = "The selected Azure Region does not support the automation & monitoring features of the Flexdesk Blueprint solution. In which region should they be deployed instead (by re-running this command with the -FallBackLocation Parameter you can automatically deploy non-compatible resources to a fallback region)?" 
 							$choices = new-object System.Collections.ArrayList<System.Management.Automation.Host.ChoiceDescription>
 							$null = $choices.add($(New-Object System.Management.Automation.Host.ChoiceDescription "&Cancel","Aborts the deployment"))
-							$me = get-command -name new-smbazuredeployment
+							$me = get-command -name new-flexdeskazuredeployment
 							#$me.Parameters["FallbackLocation"].Attributes
 							foreach($ChoiceLocation in ((($me.Parameters["FallbackLocation"]).Attributes|?{$_.TypeId.Name -eq 'ValidateSetAttribute'})).ValidValues){
 								$null = $choices.Add($(New-Object System.Management.Automation.Host.ChoiceDescription "&$ChoiceLocation","Deploys the resources in '$ChoiceLocation'"))
@@ -299,7 +299,7 @@ function New-SMBAzureDeployment {
 			$null = invoke-operation -synchash $SyncHash -root $SyncHash.Root -Log $SyncHash.Log -code {
 				try{
 					$null = Select-AzureRmProfile -Path "$env:TEMP\SBSDeployment-$CredentialGuid.json"
-					$null = New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/Inovativ/SMBblueprint-ARM/master/azuredeploy.json" `
+					$null = New-AzureRmResourceGroupDeployment -TemplateUri "https://raw.githubusercontent.com/TVDKoni/SMBblueprint-ARM/master/azuredeploy.json" `
 					-TemplateParameterObject $SyncHash.DeploymentParameters -ResourceGroupName $SyncHash.ResourceGroupName
 					if($? -eq $false){
 						throw $Error[1]

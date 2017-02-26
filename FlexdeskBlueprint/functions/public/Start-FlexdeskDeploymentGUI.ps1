@@ -1,4 +1,4 @@
-Function Start-SMBDeploymentGUI {
+Function Start-FlexdeskDeploymentGUI {
 	[CmdletBinding()]
 	param(
 		[Parameter()]
@@ -7,7 +7,7 @@ Function Start-SMBDeploymentGUI {
 	$Log = Start-Log  
 	$PSDefaultParameterValues = @{"Write-Log:Log"="$Log"}
 	if(!$PSBoundParameters.ContainsKey('NoUpdateCheck')){
-		Test-ModuleVersion -ModuleName SMBBluePrint
+		Test-ModuleVersion -ModuleName FlexdeskBluePrint
 	}
 	$script:SyncHash = [hashtable]::Synchronized(@{})
 	# Create empty view-model
@@ -44,7 +44,7 @@ Function Start-SMBDeploymentGUI {
 		$Log = Start-Log
 	}
 
-	$SyncHash.Module = "$Root\SMBDeployment.psd1"
+	$SyncHash.Module = "$Root\FlexdeskDeployment.psd1"
 	$SyncHash.XAML = (get-xaml)
 	
 	$SyncHash.Root = $script:Root
@@ -127,7 +127,7 @@ Function Start-SMBDeploymentGUI {
 				"Render",
 				[action]{
 					$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::Collapsed
-					$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::Collapsed
+					#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::Collapsed
 					if($SelectedTenant.Type.ToString() -in 'Azure','All'){
 						$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::Visible
 					}
@@ -241,7 +241,7 @@ Function Start-SMBDeploymentGUI {
 					finally{
 						$SyncHash.GUI.Dispatcher.Invoke(
 						[action]{
-							$SyncHash.WPF_Lbl_Title.Text = 'SMB Deployment GUI'
+							$SyncHash.WPF_Lbl_Title.Text = 'Flexdesk Deployment GUI'
 							
 						})
 					}
@@ -281,6 +281,10 @@ Function Start-SMBDeploymentGUI {
 			})
 			$SyncHash.WPF_Rad_Large.Add_Checked({
 				$SyncHash.ViewModel.CustomerSize = "large"
+				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
+			})
+			$SyncHash.WPF_Rad_XLarge.Add_Checked({
+				$SyncHash.ViewModel.CustomerSize = "xlarge"
 				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
 			})
 
@@ -347,10 +351,10 @@ Function Start-SMBDeploymentGUI {
 					[action]{
 						$SyncHash.WPF_Tab_MainControl.SelectedItem = $SyncHash.WPF_Tab_Log
 						$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::collapsed
-						$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
+						#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
 						$SyncHash.WPF_Btn_HomeLink.Visibility = [System.Windows.Visibility]::collapsed     
 					})
-					$CSVLocation = "$env:TEMP\SMBUsers.csv"
+					$CSVLocation = "$env:TEMP\FlexdeskUsers.csv"
 					ConvertFrom-O365 -Users $SyncHash.ViewModel.Users -Path $CSVLocation
 					$SyncHash.DeploymentJob = new-object psobject
 					$Parameters = @{
@@ -363,7 +367,7 @@ Function Start-SMBDeploymentGUI {
                         MailDomain = $SyncHash.ViewModel.MailDomain
 						NoUpdateCheck = $true
 					}
-					$SyncHash.ViewModel.CommandName = "New-SMBOfficeDeployment"
+					$SyncHash.ViewModel.CommandName = "New-FlexdeskOfficeDeployment"
 					$SyncHash.ViewModel.CommandParameters = $Parameters
 					$job = invoke-operation -Parameters $Parameters -log $SyncHash.Log -root $SyncHash.Root -SyncHash $SyncHash -Code {
 						
@@ -371,7 +375,7 @@ Function Start-SMBDeploymentGUI {
 							
 							$job = invoke-operation -Parameters $Parameters -log $SyncHash.Log -root $SyncHash.Root -SyncHash $SyncHash -Code {
 								try{
-									new-smbofficedeployment @Parameters
+									new-flexdeskofficedeployment @Parameters
 								} catch {
 									write-log -type error -message "Error during Office Deployment: $_"
 								}
@@ -519,7 +523,7 @@ Function Start-SMBDeploymentGUI {
 					invoke-message "Not all parameters are provided for deployment"
 					return
 				}
-				$SyncHash.ViewModel.Resourcegroup = "smb_rg_$($SyncHash.ViewModel.CustomerName)"
+				$SyncHash.ViewModel.Resourcegroup = "flxd_rg_$($SyncHash.ViewModel.CustomerName)"
 				Add-AzureRmAccount -Credential $SyncHash.ViewModel.AzureCredential -TenantId $SyncHash.ViewModel.ActiveTenant.Id -SubscriptionId $SyncHash.ViewModel.ActiveSubscription.Id
 				if((($RG = Get-AzureRmResourceGroup -Name $SyncHash.ViewModel.ResourceGroup -ErrorAction SilentlyContinue)) -ne $null){
 					Invoke-Message -Message "The target resource group $($SyncHash.ViewModel.ResourceGroup) already exists, please modify the customer prefix"
@@ -590,21 +594,21 @@ Function Start-SMBDeploymentGUI {
 					if($SyncHash.ViewModel.FallbackAction -ne $null){
 						$DeploymentParameters.Add("FallbackLocation",$SyncHash.ViewModel.FallbackAction)
 					}
-					$SyncHash.ViewModel.CommandName = "New-SMBAzureDeployment"
+					$SyncHash.ViewModel.CommandName = "New-FlexdeskAzureDeployment"
 					$SyncHash.ViewModel.CommandParameters = $DeploymentParameters
 					$SyncHash.GUI.Dispatcher.invoke(
 					"Render",
 					[action]{
 						$SyncHash.WPF_Tab_MainControl.SelectedItem = $SyncHash.WPF_Tab_Log
 						$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::collapsed
-						$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
+						#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
 						$SyncHash.WPF_Btn_HomeLink.Visibility = [System.Windows.Visibility]::collapsed    
 					})
 					
 					$job = invoke-operation -synchash $SyncHash -root $SyncHash.Root -log $SyncHash.Log -code {
 						try {
 							
-							$SyncHash.DeploymentJob = New-SMBAzureDeployment @Parameters
+							$SyncHash.DeploymentJob = New-FlexdeskAzureDeployment @Parameters
 							while($SyncHash.DeploymentJob.Completed -ne $true){
 								$SyncHash.GUI.Dispatcher.invoke(
 								"Render",
@@ -977,7 +981,7 @@ Function Start-SMBDeploymentGUI {
 				Invoke-Expression "explorer.exe '/select,$Log'"
 			})
 			$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::collapsed
-			$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
+			#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
 			$SyncHash.WPF_Spl_ServiceUnavailable.Visibility = [System.Windows.Visibility]::collapsed
 			$SyncHash.GUI.DataContext = $SyncHash.ViewModel
 			$SyncHash.WPF_Cmb_Country.Items.Clear()
