@@ -14,8 +14,8 @@ function New-FlexdeskAzureDeployment {
 	[ValidateNotNullOrEmpty()]
 	[string] $CustomerName,
 	[parameter(Mandatory=$true)]
-	[ValidateSet('small','medium','large','xlarge')]
-	[string] $CustomerSize = 'small',
+	[ValidateSet('small','medium','large','fsmall','fmedium','flarge')]
+	[string] $CustomerSize = 'fsmall',
 	[parameter()]
 	[ValidateSet('none','small','medium')]
 	[string] $AdditionalVMSize = 'none',

@@ -271,20 +271,28 @@ Function Start-FlexdeskDeploymentGUI {
 				$SyncHash.WPF_Txt_Customer.Text = [Regex]::Replace($SyncHash.WPF_Txt_Customer.Text,'[^a-zA-Z0-9]', '')
 				$SyncHash.ViewModel.CustomerName = $SyncHash.WPF_Txt_Customer.Text
 			})
-			$SyncHash.WPF_Rad_Small.Add_Checked({
+			$SyncHash.WPF_Rad_SmbSmall.Add_Checked({
 				$SyncHash.ViewModel.CustomerSize = "small"
 				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
 			})
-			$SyncHash.WPF_Rad_Medium.Add_Checked({
+			$SyncHash.WPF_Rad_SmbMedium.Add_Checked({
 				$SyncHash.ViewModel.CustomerSize = "medium"
 				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
 			})
-			$SyncHash.WPF_Rad_Large.Add_Checked({
+			$SyncHash.WPF_Rad_SmbLarge.Add_Checked({
 				$SyncHash.ViewModel.CustomerSize = "large"
 				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
 			})
-			$SyncHash.WPF_Rad_XLarge.Add_Checked({
-				$SyncHash.ViewModel.CustomerSize = "xlarge"
+			$SyncHash.WPF_Rad_FlxdSmall.Add_Checked({
+				$SyncHash.ViewModel.CustomerSize = "fsmall"
+				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
+			})
+			$SyncHash.WPF_Rad_FlxdMedium.Add_Checked({
+				$SyncHash.ViewModel.CustomerSize = "fmedium"
+				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
+			})
+			$SyncHash.WPF_Rad_FlxdLarge.Add_Checked({
+				$SyncHash.ViewModel.CustomerSize = "flarge"
 				Write-Log -Message "CustomerSize set to $($SyncHash.ViewModel.CustomerSize)"
 			})
 

@@ -377,13 +377,15 @@ function Get-XAML {
                                 <StackPanel Orientation="Horizontal">
 								<StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
 
-                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_Small" Tag="small" FontSize="20" IsChecked="True" VerticalAlignment="Center" VerticalContentAlignment="Center">Small</RadioButton>
-                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_Medium" Tag="medium"  FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">Medium</RadioButton>
-                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_Large" Tag="large" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" >Large</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_SmbSmall" Tag="small" FontSize="20" IsChecked="True" VerticalAlignment="Center" VerticalContentAlignment="Center">SMB Small</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_SmbMedium" Tag="medium"  FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">SMB Medium</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_SmbLarge" Tag="large" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" >SMB Large</RadioButton>
                                 </StackPanel>
                                 <StackPanel Margin="30,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
 
-                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_XLarge" Tag="xlarge" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">Extra Large</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_FlxdSmall" Tag="fsmall" FontSize="20" IsChecked="True" VerticalAlignment="Center" VerticalContentAlignment="Center">Flexdesk Small</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_FlxdMedium" Tag="fmedium"  FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center">Flexdesk Medium</RadioButton>
+                                    <RadioButton GroupName="ScenarioGroup" Name="Rad_FlxdLarge" Tag="flarge" FontSize="20" VerticalAlignment="Center" VerticalContentAlignment="Center" >Flexdesk Large</RadioButton>
                                 </StackPanel>
                                 </StackPanel>
                                 <!--<Button Name="btn_Small" Margin="0,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="100" Background="#FF0088FF" Foreground="White">Small</Button>
