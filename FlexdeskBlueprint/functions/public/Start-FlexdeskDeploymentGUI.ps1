@@ -127,7 +127,7 @@ Function Start-FlexdeskDeploymentGUI {
 				"Render",
 				[action]{
 					$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::Collapsed
-					#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::Collapsed
+					$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::Collapsed
 					if($SelectedTenant.Type.ToString() -in 'Azure','All'){
 						$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::Visible
 					}
@@ -351,7 +351,7 @@ Function Start-FlexdeskDeploymentGUI {
 					[action]{
 						$SyncHash.WPF_Tab_MainControl.SelectedItem = $SyncHash.WPF_Tab_Log
 						$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::collapsed
-						#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
+						$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
 						$SyncHash.WPF_Btn_HomeLink.Visibility = [System.Windows.Visibility]::collapsed     
 					})
 					$CSVLocation = "$env:TEMP\FlexdeskUsers.csv"
@@ -601,7 +601,7 @@ Function Start-FlexdeskDeploymentGUI {
 					[action]{
 						$SyncHash.WPF_Tab_MainControl.SelectedItem = $SyncHash.WPF_Tab_Log
 						$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::collapsed
-						#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
+						$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
 						$SyncHash.WPF_Btn_HomeLink.Visibility = [System.Windows.Visibility]::collapsed    
 					})
 					
@@ -981,7 +981,7 @@ Function Start-FlexdeskDeploymentGUI {
 				Invoke-Expression "explorer.exe '/select,$Log'"
 			})
 			$SyncHash.WPF_Btn_O365Link.Visibility = [System.Windows.Visibility]::collapsed
-			#$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
+			$SyncHash.WPF_Btn_AzureLink.Visibility = [System.Windows.Visibility]::collapsed
 			$SyncHash.WPF_Spl_ServiceUnavailable.Visibility = [System.Windows.Visibility]::collapsed
 			$SyncHash.GUI.DataContext = $SyncHash.ViewModel
 			$SyncHash.WPF_Cmb_Country.Items.Clear()
