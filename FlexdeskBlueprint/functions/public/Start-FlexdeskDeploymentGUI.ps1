@@ -38,6 +38,9 @@ Function Start-FlexdeskDeploymentGUI {
 		Management = 'free'
 		OS = '2016'
 		StorageType = $null
+		NamingEnv = 'p'
+		NamingCust = 'demo'
+		NamingProj = 'flxd'
 	}
 	write-host "Please wait while the graphical interface is being loaded"
 	if($Log -eq $null){
@@ -111,6 +114,7 @@ Function Start-FlexdeskDeploymentGUI {
 				}
 				$Locations = $Locations|sort
 				$SyncHash.WPF_Cmb_PrimaryLocation.ItemsSource = $Locations
+				$SyncHash.WPF_Cmb_PrimaryLocation.SelectedItem = "westeurope"
 				# Some tinkering to get the license selection box working properly
 				$array = new-object Object[] $SyncHash.ViewModel.Licenses.Values.Count
 				$SyncHash.ViewModel.Licenses.Values.CopyTo($array,0)
@@ -264,9 +268,17 @@ Function Start-FlexdeskDeploymentGUI {
 	
 				$SyncHash.ViewModel.MailDomain = $SyncHash.WPF_Txt_Mail.Text
 			})
-			
-			
-
+			$SyncHash.WPF_Cmb_NamingEnv.Add_SelectionChanged({
+				$SyncHash.ViewModel.NamingEnv = $SyncHash.WPF_Cmb_NamingEnv.SelectedItem.Tag
+			})
+			$SyncHash.WPF_Txt_NamingCust.Add_TextChanged({
+				$SyncHash.WPF_Txt_NamingCust.Text = [Regex]::Replace($SyncHash.WPF_Txt_NamingCust.Text,'[^a-z0-9]', '')
+				$SyncHash.ViewModel.NamingCust = $SyncHash.WPF_Txt_NamingCust
+			})
+			$SyncHash.WPF_Txt_NamingProj.Add_TextChanged({
+				$SyncHash.WPF_Txt_NamingProj.Text = [Regex]::Replace($SyncHash.WPF_Txt_NamingProj.Text,'[^a-z0-9]', '')
+				$SyncHash.ViewModel.NamingProj = $SyncHash.WPF_Txt_NamingProj.Text
+			})
 			$SyncHash.WPF_Txt_Customer.Add_TextChanged({
 				$SyncHash.WPF_Txt_Customer.Text = [Regex]::Replace($SyncHash.WPF_Txt_Customer.Text,'[^a-zA-Z0-9]', '')
 				$SyncHash.ViewModel.CustomerName = $SyncHash.WPF_Txt_Customer.Text
@@ -531,7 +543,7 @@ Function Start-FlexdeskDeploymentGUI {
 					invoke-message "Not all parameters are provided for deployment"
 					return
 				}
-				$SyncHash.ViewModel.Resourcegroup = "flxd_rg_$($SyncHash.ViewModel.CustomerName)"
+				$SyncHash.ViewModel.Resourcegroup = "$($SyncHash.ViewModel.NamingEnv)$($SyncHash.ViewModel.NamingCust)$($SyncHash.ViewModel.NamingProj)resg001"
 				Add-AzureRmAccount -Credential $SyncHash.ViewModel.AzureCredential -TenantId $SyncHash.ViewModel.ActiveTenant.Id -SubscriptionId $SyncHash.ViewModel.ActiveSubscription.Id
 				if((($RG = Get-AzureRmResourceGroup -Name $SyncHash.ViewModel.ResourceGroup -ErrorAction SilentlyContinue)) -ne $null){
 					Invoke-Message -Message "The target resource group $($SyncHash.ViewModel.ResourceGroup) already exists, please modify the customer prefix"
@@ -567,8 +579,11 @@ Function Start-FlexdeskDeploymentGUI {
 				"Management: $($SyncHash.viewModel.Management)`r`n" +
 				"Location: $($SyncHash.viewModel.AzureLocation)`r`n" +
 				"Fallback Action: $($SyncHash.viewModel.FallbackAction)`r`n" +
+				"StorageType: $($SyncHash.viewModel.StorageType)`r`n" +
 				"OS: $($SyncHash.viewModel.OS)`r`n" +
-				"OS: $($SyncHash.viewModel.StorageType)`r`n" +
+				"NamingEnv: $($SyncHash.viewModel.NamingEnv)`r`n" +
+				"NamingCust: $($SyncHash.viewModel.NamingCust)`r`n" +
+				"NamingProj: $($SyncHash.viewModel.NamingProj)`r`n" +
 				"`r`n" +`
 				"Please note this credential for use with the solution:`r`n" +`
 				"User: sysadmin`r`n" +`
@@ -597,7 +612,9 @@ Function Start-FlexdeskDeploymentGUI {
 						OS=$SyncHash.ViewModel.OS
 						StorageType = $SyncHash.ViewModel.StorageType
 						NoUpdateCheck = $true
-
+						NamingEnv = $SyncHash.ViewModel.NamingEnv
+						NamingCust = $SyncHash.ViewModel.NamingCust
+						NamingProj = $SyncHash.ViewModel.NamingProj
 					}
 					if($SyncHash.ViewModel.FallbackAction -ne $null){
 						$DeploymentParameters.Add("FallbackLocation",$SyncHash.ViewModel.FallbackAction)

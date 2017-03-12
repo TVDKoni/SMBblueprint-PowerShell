@@ -6,7 +6,7 @@ function New-FlexdeskAzureDeployment {
 	[string] $Location,
 	[Parameter()]
 	[ValidateNotNullOrEmpty()]
-	[ValidateSet('southeastasia','westeurope','australiasoutheast')]
+	[ValidateSet('southeastasia','westeurope','northeurope','australiasoutheast')]
 	[string] $FallbackLocation,
 	[parameter()]
 	[switch] $AsJob,
@@ -50,9 +50,16 @@ function New-FlexdeskAzureDeployment {
 	[parameter()]
 	[ValidateNotNullOrEmpty()]
 	[string] $SubscriptionName,
-	[Parameter(DontShow=$true)]
+	[parameter()]
 	[ValidateNotNullOrEmpty()]
-	[string] $ResourceGroupPrefix = "flxd_rg_",
+	[ValidateSet('p','t','u','d')]
+	[string] $NamingEnv = "p",
+	[parameter()]
+	[ValidateNotNullOrEmpty()]
+	[string] $NamingCust = "demo",
+	[parameter()]
+	[ValidateNotNullOrEmpty()]
+	[string] $NamingProj = "flxd",
 	[Parameter()]
 	[switch] $NoUpdateCheck,
 	[Parameter()]
@@ -114,9 +121,8 @@ function New-FlexdeskAzureDeployment {
 		}
 
 		$CustomerNamePrefix = [Regex]::Replace($CustomerName,'[^a-zA-Z0-9]', '')
-		$ResourceGroupName = "$ResourceGroupPrefix$CustomerNamePrefix"
 		$SecurePassword = $SysAdminPassword|ConvertTo-SecureString -AsPlainText -Force
-		write-log -Message "Using $CustomerNamePrefix as resource naming prefix"
+		$ResourceGroupName = "$($NamingEnv)$($NamingCust)$($NamingProj)resg001"
 		Write-Log -Message "Using $ResourceGroupName as target resource group"
 		$ActiveSubscription = ""
 		if($Credential){
@@ -148,11 +154,11 @@ function New-FlexdeskAzureDeployment {
 			return $null
 		}
 		if((Get-AzureRmResourceGroup -Name $ResourceGroupName -ErrorAction Ignore) -ne $null){
-			Write-Log -Type Error -Message "Resource group already exists, please choose another customer name"
+			Write-Log -Type Error -Message "Resource group already exists, please choose another ResourceGroupName"
 			return
 		}
 		if((Test-AzureRmDnsAvailability -DomainNameLabel $CustomerNamePrefix.ToLower() -Location "westeurope") -eq $false){
-			write-log -type error -Message "Domain Name already taken, please choose another customer name"
+			write-log -type error -Message "Domain Name already taken, please choose another domain name"
 			return
 		}
 		if($CustomerNamePrefix -like "*microsoft*"){
@@ -193,10 +199,6 @@ function New-FlexdeskAzureDeployment {
 								$null = $choices.Add($(New-Object System.Management.Automation.Host.ChoiceDescription "&$ChoiceLocation","Deploys the resources in '$ChoiceLocation'"))
 							}
 							$choices = $choices.ToArray([System.Management.Automation.Host.ChoiceDescription])
-						
-
-							
-
 							$result = $host.ui.PromptForChoice($title, $message, $choices, 0) 
 							write-log -message "You chose: $($choices[$result].Label.Replace('&',''))"
 							switch ($choices[$result].Label.Replace('&',''))
@@ -245,6 +247,9 @@ function New-FlexdeskAzureDeployment {
 			fallbackLocation = $(if($FallbackLocation ){$FallbackLocation} else {'westeurope'})
 			OSVersion = $OS
 			StorageType = $StorageType
+			NamingEnv = $NamingEnv
+			NamingCust = $NamingCust
+			NamingProj = $NamingProj
 		}
 		$AzureParameters.Add('adminPassword',$SecurePassword)
 		

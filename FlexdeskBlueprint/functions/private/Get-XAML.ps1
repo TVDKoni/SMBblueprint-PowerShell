@@ -171,7 +171,7 @@ function Get-XAML {
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Left">Tenant:</Label>
-                                <ComboBox Name="Cmb_Tenants" VerticalAlignment="Center" HorizontalAlignment="Left" Width="300" />
+                                <ComboBox Name="Cmb_Tenants" VerticalAlignment="Center" HorizontalAlignment="Left" Width="550" />
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
@@ -496,7 +496,22 @@ function Get-XAML {
 
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Grid.Row="1" Header="5. Execute" >
+                        <GroupBox Grid.Row="1" Header="5. Naming" >
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Label VerticalAlignment="Center">Environment:</Label>
+								<ComboBox Name="Cmb_NamingEnv" Width="100" VerticalAlignment="Center" HorizontalAlignment="Center">
+									<ComboBoxItem Tag="p" IsSelected="True">Production</ComboBoxItem>
+									<ComboBoxItem Tag="t">Test</ComboBoxItem>
+									<ComboBoxItem Tag="u">Acceptance</ComboBoxItem>
+									<ComboBoxItem Tag="d">Development</ComboBoxItem>
+								</ComboBox>
+								<Label VerticalAlignment="Center" Margin="20,0,0,0">Customer:</Label>
+                                <TextBox VerticalAlignment="Center" Name="Txt_NamingCust" Width="40" MaxLength="4" Text="demo" />
+                                <Label VerticalAlignment="Center" Margin="20,0,0,0">Project/Department:</Label>
+                                <TextBox VerticalAlignment="Center" Name="Txt_NamingProj" Width="40" MaxLength="4" Text="flxd" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Header="6. Execute" >
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Label VerticalAlignment="Center">Admin Password:</Label>
                                 <PasswordBox VerticalAlignment="Center" Width="150" Name="Txt_AzurePassword" />
