@@ -36,6 +36,9 @@ function New-FlexdeskAzureVpnCerts {
 		
 		[parameter(Mandatory=$true)]
 		[string] $CertPassword = $(New-SWRandomPassword),
+		
+		[parameter(Mandatory=$true)]
+		[string] $VpnAddressPool = "10.4.5.0/24",
 
 		[parameter(DontShow=$true)]
 		[string] $Log = $null
@@ -98,7 +101,7 @@ function New-FlexdeskAzureVpnCerts {
 			return
 		}
 		
-		$Gateway= Get-AzureRmVirtualNetworkGateway -Name $GatewayName -ResourceGroupName $ResourceGroupName -ErrorAction Ignore
+		$Gateway = Get-AzureRmVirtualNetworkGateway -Name $GatewayName -ResourceGroupName $ResourceGroupName -ErrorAction Ignore
 		if($Gateway -eq $null){
 			Write-Log -Type Error -Message "Gateway not found, please choose another GatewayName"
 			return
@@ -108,7 +111,8 @@ function New-FlexdeskAzureVpnCerts {
 		if(!$Continue){return}
 
 		Write-Host "Generating root certificate:"
-		$rootCertificate = New-SelfSignedCertificate -KeyUsage DigitalSignature -KeyAlgorithm RSA -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -DnsName $TenantDomain
+		$rootCertificate = New-SelfSignedCertificate -Type Custom -KeySpec Signature -KeyUsageProperty Sign -KeyUsage CertSign -HashAlgorithm sha256 -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -Subject "CN=$TenantDomain"
+		#$rootCertificate = New-SelfSignedCertificate -KeyUsage DigitalSignature -KeyAlgorithm RSA -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -DnsName $TenantDomain
 		$pwd = ConvertTo-SecureString -String $CertPassword -Force -AsPlainText
 		$null = Export-PfxCertificate -Cert $rootCertificate -FilePath "$($TenantDomain)_Root.pfx" -Password $pwd
 		Write-Host "  $($TenantDomain)_Root.pfx"
@@ -119,7 +123,8 @@ function New-FlexdeskAzureVpnCerts {
 		Write-Host "Generating client certificates:"
 		for($i=1; $i -le $NumClientCertificate; $i++)
 		{
-			$clientCertificate = New-SelfSignedCertificate -KeyUsage DigitalSignature -KeyAlgorithm RSA -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -DnsName "User$($i).$($TenantDomain)" -Signer $rootCertificate
+			$clientCertificate = New-SelfSignedCertificate -Type Custom -KeySpec Signature -HashAlgorithm sha256 -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -Subject "CN=User$($i).$($TenantDomain)" -Signer $rootCertificate -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
+			#$clientCertificate = New-SelfSignedCertificate -KeyUsage DigitalSignature -KeyAlgorithm RSA -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -DnsName "User$($i).$($TenantDomain)" -Signer $rootCertificate
 			$null = Export-PfxCertificate -Cert $clientCertificate -FilePath "$($TenantDomain)_User$($i).pfx" -Password $pwd
 			Write-Host "  $($TenantDomain)_User$($i).pfx"
 			$null = Export-Certificate -Cert $clientCertificate -FilePath "$($TenantDomain)_User$($i).cer"
@@ -128,10 +133,15 @@ function New-FlexdeskAzureVpnCerts {
 		}
 
 		Write-Host "Installing root certificate in VPN Gateway."
-		$CertText = $([Convert]::ToBase64String($rootCertificate.Export('Cert')))
-		$CertificateText = for ($i=1; $i -lt $CertText.Length -1 ; $i++){$CertText[$i]}
-		$installedCertificate = Add-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_Root.cer" -PublicCertData ($CertificateText | out-string) -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName		
-
+		$CertificateText = $([Convert]::ToBase64String($rootCertificate.Export('Cert')))
+		$vpnClientConfig = Set-AzureRmVirtualNetworkGatewayVpnClientConfig -VirtualNetworkGateway $Gateway -VpnClientAddressPool $VpnAddressPool
+		$installedCertificate = Add-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_Root.cer" -PublicCertData $([Convert]::ToBase64String($rootCertificate.Export('Cert'))) -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName
+		$rootCert = Get-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_Root.cer" -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName
+		if($rootCert -eq $null){
+			Write-Log -Type Error -Message "Can't install the root certificate!"
+			return
+		}
+		
 		Write-Host "Downloading VPN client."
 		Get-AzureRmVpnClientPackage -ResourceGroupName $ResourceGroupName -VirtualNetworkGatewayName $GatewayName -ProcessorArchitecture Amd64
 	}
