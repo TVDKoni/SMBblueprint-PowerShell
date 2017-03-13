@@ -176,7 +176,7 @@ function New-FlexdeskAzureDeployment {
 			Write-Log -Type Error -Message "Resource group already exists, please choose another ResourceGroupName"
 			return
 		}
-		if((Test-AzureRmDnsAvailability -DomainNameLabel $CustomerNamePrefix.ToLower() -Location "westeurope") -eq $false){
+		if((Test-AzureRmDnsAvailability -DomainNameLabel $CustomerNamePrefix.ToLower() -Location $Location) -eq $false){
 			write-log -type error -Message "Domain Name already taken, please choose another domain name"
 			return
 		}
