@@ -1,74 +1,93 @@
 function New-FlexdeskAzureDeployment {
 	[cmdletbinding(DefaultParameterSetName="AzureTenantDomain")]
 	param(
-	[Parameter(Mandatory=$true)]
-	[ValidateNotNullOrEmpty()]
-	[string] $Location,
-	[Parameter()]
-	[ValidateNotNullOrEmpty()]
-	[ValidateSet('southeastasia','westeurope','northeurope','australiasoutheast')]
-	[string] $FallbackLocation,
-	[parameter()]
-	[switch] $AsJob,
-	[parameter(Mandatory=$true)]
-	[ValidateNotNullOrEmpty()]
-	[string] $CustomerName,
-	[parameter(Mandatory=$true)]
-	[ValidateSet('small','medium','large','fsmall','fmedium','flarge')]
-	[string] $CustomerSize = 'fsmall',
-	[parameter()]
-	[ValidateSet('none','small','medium')]
-	[string] $AdditionalVMSize = 'none',
-	[parameter()]
-	[ValidateSet('none','small')]
-	[string] $AdditionalSQLInstanceSize = 'none',
-	[ValidateSet('none','standard')]
-	[string] $Backup = 'none',
-	[ValidateSet('none','basic')]
-	[string] $VPN = 'none',
-	[parameter()]
-	[ValidateNotNullOrEmpty()]
-	[ValidateSet('free')]
-	[string] $Management = 'free',
-	[parameter()]
-	[ValidateSet('2012R2','2016')]
-	[string] $OS = '2012R2',
-	[parameter()]
-	[string] $SysAdminPassword = $(New-SWRandomPassword),
-	[parameter(Mandatory=$true)]
-	[ValidateNotNullOrEmpty()]
-	[pscredential] $Credential = (Get-Credential -Message "Please provide your Partner Credentials"),
-	[parameter(ParameterSetName="AzureTenantId",Mandatory=$true)]
-	[ValidateNotNullOrEmpty()]
-	[string] $TenantId,
-	[parameter(ParameterSetName="AzureTenantDomain",Mandatory=$true)]
-	[ValidateNotNullOrEmpty()]
-	[string] $TenantDomain,
-	[parameter()]
-	[ValidateNotNullOrEmpty()]
-	[string] $SubscriptionId,
-	[parameter()]
-	[ValidateNotNullOrEmpty()]
-	[string] $SubscriptionName,
-	[parameter()]
-	[ValidateNotNullOrEmpty()]
-	[ValidateSet('p','t','u','d')]
-	[string] $NamingEnv = "p",
-	[parameter()]
-	[ValidateNotNullOrEmpty()]
-	[string] $NamingCust = "demo",
-	[parameter()]
-	[ValidateNotNullOrEmpty()]
-	[string] $NamingProj = "flxd",
-	[Parameter()]
-	[switch] $NoUpdateCheck,
-	[Parameter()]
-	[ValidateSet('Standard_LRS',"Standard_ZRS","Standard_GRS","Standard_RAGRS","Premium_LRS")]
-	[string] $StorageType,
-	[Parameter(DontShow=$true)]
-	[string] $Log = $null
-
-
+		[parameter(Mandatory=$true)]
+		[ValidateNotNullOrEmpty()]
+		[string] $Location,
+		
+		[parameter()]
+		[ValidateNotNullOrEmpty()]
+		[ValidateSet('southeastasia','westeurope','northeurope','australiasoutheast')]
+		[string] $FallbackLocation,
+		
+		[parameter()]
+		[switch] $AsJob,
+		
+		[parameter(Mandatory=$true)]
+		[ValidateNotNullOrEmpty()]
+		[string] $CustomerName,
+		
+		[parameter(Mandatory=$true)]
+		[ValidateSet('small','medium','large','fsmall','fmedium','flarge')]
+		[string] $CustomerSize = 'fsmall',
+		
+		[parameter()]
+		[ValidateSet('none','small','medium')]
+		[string] $AdditionalVMSize = 'none',
+		
+		[parameter()]
+		[ValidateSet('none','small')]
+		[string] $AdditionalSQLInstanceSize = 'none',
+		
+		[ValidateSet('none','standard')]
+		[string] $Backup = 'none',
+		
+		[ValidateSet('none','basic')]
+		[string] $VPN = 'none',
+		
+		[parameter()]
+		[ValidateNotNullOrEmpty()]
+		[ValidateSet('free')]
+		[string] $Management = 'free',
+		
+		[parameter()]
+		[ValidateSet('2012R2','2016')]
+		[string] $OS = '2012R2',
+		
+		[parameter()]
+		[string] $SysAdminPassword = $(New-SWRandomPassword),
+		[parameter(Mandatory=$true)]
+		[ValidateNotNullOrEmpty()]
+		[pscredential] $Credential = (Get-Credential -Message "Please provide your Partner Credentials"),
+		
+		[parameter(ParameterSetName="AzureTenantId",Mandatory=$true)]
+		[ValidateNotNullOrEmpty()]
+		[string] $TenantId,
+		
+		[parameter(ParameterSetName="AzureTenantDomain",Mandatory=$true)]
+		[ValidateNotNullOrEmpty()]
+		[string] $TenantDomain,
+		
+		[parameter()]
+		[ValidateNotNullOrEmpty()]
+		[string] $SubscriptionId,
+		
+		[parameter()]
+		[ValidateNotNullOrEmpty()]
+		[string] $SubscriptionName,
+		
+		[parameter()]
+		[ValidateNotNullOrEmpty()]
+		[ValidateSet('p','t','u','d')]
+		[string] $NamingEnv = "p",
+		
+		[parameter()]
+		[ValidateLength(1,4)]
+		[string] $NamingCust = "demo",
+		
+		[parameter()]
+		[ValidateLength(1,3)]
+		[string] $NamingProj = "flx",
+		
+		[parameter()]
+		[switch] $NoUpdateCheck,
+		
+		[parameter()]
+		[ValidateSet('Standard_LRS',"Standard_ZRS","Standard_GRS","Standard_RAGRS","Premium_LRS")]
+		[string] $StorageType,
+		
+		[parameter(DontShow=$true)]
+		[string] $Log = $null
 	)
 
 <#	DynamicParam {

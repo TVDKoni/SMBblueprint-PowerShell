@@ -508,7 +508,7 @@ function Get-XAML {
 								<Label VerticalAlignment="Center" Margin="20,0,0,0">Customer:</Label>
                                 <TextBox VerticalAlignment="Center" Name="Txt_NamingCust" Width="40" MaxLength="4" Text="demo" />
                                 <Label VerticalAlignment="Center" Margin="20,0,0,0">Project/Department:</Label>
-                                <TextBox VerticalAlignment="Center" Name="Txt_NamingProj" Width="40" MaxLength="4" Text="flxd" />
+                                <TextBox VerticalAlignment="Center" Name="Txt_NamingProj" Width="40" MaxLength="3" Text="flx" />
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Header="6. Execute" >

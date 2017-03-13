@@ -40,7 +40,7 @@ Function Start-FlexdeskDeploymentGUI {
 		StorageType = $null
 		NamingEnv = 'p'
 		NamingCust = 'demo'
-		NamingProj = 'flxd'
+		NamingProj = 'flx'
 	}
 	write-host "Please wait while the graphical interface is being loaded"
 	if($Log -eq $null){
