@@ -46,6 +46,7 @@ function New-FlexdeskAzureDeployment {
 		
 		[parameter()]
 		[string] $SysAdminPassword = $(New-SWRandomPassword),
+		
 		[parameter(Mandatory=$true)]
 		[ValidateNotNullOrEmpty()]
 		[pscredential] $Credential = (Get-Credential -Message "Please provide your Partner Credentials"),
