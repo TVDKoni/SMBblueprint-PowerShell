@@ -111,39 +111,39 @@ function New-FlexdeskAzureVpnCerts {
 		if(!$Continue){return}
 
 		Write-Host "Generating root certificate:"
-		$rootCertificate = New-SelfSignedCertificate -Type Custom -KeySpec Signature -KeyUsageProperty Sign -KeyUsage CertSign -HashAlgorithm sha256 -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -Subject "CN=$TenantDomain"
-		#$rootCertificate = New-SelfSignedCertificate -KeyUsage DigitalSignature -KeyAlgorithm RSA -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -DnsName $TenantDomain
+		$rootCertificate = New-SelfSignedCertificate -Type Custom -KeySpec Signature -KeyUsageProperty Sign -KeyUsage CertSign -HashAlgorithm sha256 -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -Subject "CN=$($GatewayName)_$($ResourceGroupName)_$($TenantDomain)"
 		$pwd = ConvertTo-SecureString -String $CertPassword -Force -AsPlainText
-		$null = Export-PfxCertificate -Cert $rootCertificate -FilePath "$($TenantDomain)_Root.pfx" -Password $pwd
-		Write-Host "  $($TenantDomain)_Root.pfx"
-		$null = Export-Certificate -Cert $rootCertificate -FilePath "$($TenantDomain)_Root.cer"
-		$([Convert]::ToBase64String($rootCertificate.Export('Cert'))) | Set-Content -Path "$($TenantDomain)_RootBase64.cer"
-		Write-Host "  $($TenantDomain)__RootBase64.cer"
+		$null = Export-PfxCertificate -Cert $rootCertificate -FilePath "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_Root.pfx" -Password $pwd
+		Write-Host "  $($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_Root.pfx"
+		$null = Export-Certificate -Cert $rootCertificate -FilePath "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_Root.cer"
+		$([Convert]::ToBase64String($rootCertificate.Export('Cert'))) | Set-Content -Path "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_RootBase64.cer"
+		Write-Host "  $($TenantDomain)_$($ResourceGroupName)_$($GatewayName)__RootBase64.cer"
 		
 		Write-Host "Generating client certificates:"
 		for($i=1; $i -le $NumClientCertificate; $i++)
 		{
-			$clientCertificate = New-SelfSignedCertificate -Type Custom -KeySpec Signature -HashAlgorithm sha256 -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -Subject "CN=User$($i).$($TenantDomain)" -Signer $rootCertificate -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
-			#$clientCertificate = New-SelfSignedCertificate -KeyUsage DigitalSignature -KeyAlgorithm RSA -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -DnsName "User$($i).$($TenantDomain)" -Signer $rootCertificate
-			$null = Export-PfxCertificate -Cert $clientCertificate -FilePath "$($TenantDomain)_User$($i).pfx" -Password $pwd
-			Write-Host "  $($TenantDomain)_User$($i).pfx"
-			$null = Export-Certificate -Cert $clientCertificate -FilePath "$($TenantDomain)_User$($i).cer"
-			$([Convert]::ToBase64String($clientCertificate.Export('Cert'))) | Set-Content -Path "$($TenantDomain)_User$($i)Base64.cer"
-			Write-Host "  $($TenantDomain)_User$($i)Base64.cer"
+			$clientCertificate = New-SelfSignedCertificate -Type Custom -KeySpec Signature -HashAlgorithm sha256 -KeyLength 2048 -KeyExportPolicy Exportable -CertStoreLocation "cert:\localmachine\my" -Subject "CN=User$($i)_$($GatewayName)_$($ResourceGroupName)_$($TenantDomain)" -Signer $rootCertificate -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.2")
+			$null = Export-PfxCertificate -Cert $clientCertificate -FilePath "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_User$($i).pfx" -Password $pwd
+			Write-Host "  $($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_User$($i).pfx"
+			$null = Export-Certificate -Cert $clientCertificate -FilePath "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_User$($i).cer"
+			$([Convert]::ToBase64String($clientCertificate.Export('Cert'))) | Set-Content -Path "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_User$($i)Base64.cer"
+			Write-Host "  $($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_User$($i)Base64.cer"
 		}
 
-		Write-Host "Installing root certificate in VPN Gateway."
-		$CertificateText = $([Convert]::ToBase64String($rootCertificate.Export('Cert')))
+		Write-Host "Installing root certificate in VPN Gateway"
+		Write-Host "  Setting VpnClientConfig"
 		$vpnClientConfig = Set-AzureRmVirtualNetworkGatewayVpnClientConfig -VirtualNetworkGateway $Gateway -VpnClientAddressPool $VpnAddressPool
-		$installedCertificate = Add-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_Root.cer" -PublicCertData $([Convert]::ToBase64String($rootCertificate.Export('Cert'))) -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName
-		$rootCert = Get-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_Root.cer" -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName
+		Write-Host "  Adding root certificate"
+		$installedCertificate = Add-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_Root.cer" -PublicCertData $([Convert]::ToBase64String($rootCertificate.Export('Cert'))) -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName
+		$rootCert = Get-AzureRmVpnClientRootCertificate -VpnClientRootCertificateName "$($TenantDomain)_$($ResourceGroupName)_$($GatewayName)_Root.cer" -VirtualNetworkGatewayName $GatewayName -ResourceGroupName $ResourceGroupName
 		if($rootCert -eq $null){
 			Write-Log -Type Error -Message "Can't install the root certificate!"
 			return
 		}
 		
 		Write-Host "Downloading VPN client."
-		Get-AzureRmVpnClientPackage -ResourceGroupName $ResourceGroupName -VirtualNetworkGatewayName $GatewayName -ProcessorArchitecture Amd64
+		$downloadUrl = Get-AzureRmVpnClientPackage -ResourceGroupName $ResourceGroupName -VirtualNetworkGatewayName $GatewayName -ProcessorArchitecture Amd64
+		Invoke-WebRequest -Uri $downloadUrl -OutFile "VPNClient_$($TenantDomain)_$($ResourceGroupName)_$($GatewayName).exe"
 	}
 	
 	end{} 
