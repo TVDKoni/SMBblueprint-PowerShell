@@ -2,7 +2,7 @@
 
     RootModule = 'FlexdeskBlueprint.psm1';
 
-    ModuleVersion = '8.0.0.1';
+    ModuleVersion = '8.0.0.3';
 
     GUID = '2f47c9fb-d226-49f2-b5bf-4b6999c06644';
 
@@ -14,7 +14,7 @@
 
     Description = 'Deployment Framework for the Flexdesk solution.';
 
-    PowerShellVersion = '3.0';
+    PowerShellVersion = '4.0';
 
     FunctionsToExport = '*'
 

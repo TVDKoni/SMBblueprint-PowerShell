@@ -21,8 +21,9 @@ Function Start-FlexdeskDeploymentGUI {
 		VMSize = 'none'
 		SQLSize = 'none'
 		Backup='none'
+		UseManagedDisks='no'
 		VPN='none'
-		CustomerName = 'Inovativ'
+		CustomerName = 'Trivadis'
 		Customersize = 'small'
 		Password = New-SWRandomPassword -MinPasswordLength 16 -MaxPasswordLength 16
 		Licenses = @()
@@ -323,6 +324,10 @@ Function Start-FlexdeskDeploymentGUI {
 				$SyncHash.ViewModel.Backup = $SyncHash.WPF_Cmb_Backup.SelectedItem.Tag
 				Write-Log -Message "Backup set to $($SyncHash.WPF_Cmb_Backup.SelectedItem.Tag)"
 			})
+			$SyncHash.WPF_Cmb_UseManagedDisks.Add_SelectionChanged({
+				$SyncHash.ViewModel.UseManagedDisks = $SyncHash.WPF_Cmb_UseManagedDisks.SelectedItem.Tag
+				Write-Log -Message "UseManagedDisks set to $($SyncHash.WPF_Cmb_UseManagedDisks.SelectedItem.Tag)"
+			})
 			$SyncHash.WPF_Cmb_VPN.Add_SelectionChanged({
 				$SyncHash.ViewModel.VPN = $SyncHash.WPF_Cmb_VPN.SelectedItem.Tag
 				Write-Log -Message "VPN set to $($SyncHash.WPF_Cmb_VPN.SelectedItem.Tag)"
@@ -575,6 +580,7 @@ Function Start-FlexdeskDeploymentGUI {
 				"Extra SQL Size: $($SyncHash.ViewModel.SQLSize)`r`n" +`
 				"Extra VM Size: $($SyncHash.ViewModel.VMSize)`r`n" +`
 				"Backup Plan: $($SyncHash.ViewModel.Backup)`r`n" +`
+				"UseManagedDisks: $($SyncHash.ViewModel.UseManagedDisks)`r`n" +`
 				"VPN Plan: $($SyncHash.ViewModel.VPN)`r`n" +`
 				"Management: $($SyncHash.viewModel.Management)`r`n" +
 				"Location: $($SyncHash.viewModel.AzureLocation)`r`n" +
@@ -606,6 +612,7 @@ Function Start-FlexdeskDeploymentGUI {
 						Credential=$SyncHash.ViewModel.AzureCredential
 						VPN=$SyncHash.ViewModel.VPN
 						Backup=$SyncHash.ViewModel.Backup
+						UseManagedDisks=$SyncHash.ViewModel.UseManagedDisks
 						Log=$Log
 						Location=$SyncHash.ViewModel.AzureLocation
 						Management=$SyncHash.ViewModel.Management

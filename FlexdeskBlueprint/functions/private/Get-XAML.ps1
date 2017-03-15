@@ -403,7 +403,6 @@ function Get-XAML {
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="200"/>
-
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -422,7 +421,6 @@ function Get-XAML {
                                     <ComboBoxItem Tag="Standard_GRS">Geo-Redundant (standard)</ComboBoxItem>
                                     <ComboBoxItem Tag="Standard_RAGRS">Read-Access Geo-Redundant (standard)</ComboBoxItem>
                                     <ComboBoxItem Tag="Premium_LRS">Locally Redundant (premium)</ComboBoxItem>
-
                                 </ComboBox>
 
                                 <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">OS:</Label>
@@ -431,37 +429,37 @@ function Get-XAML {
                                     <ComboBoxItem Tag="2012R2">2012R2</ComboBoxItem>
                                 </ComboBox>
 
-
-                                <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">Provision additional VM:</Label>
-                                <ComboBox Grid.Column="2" Grid.Row="2" Name="Cmb_ExtraVMSize">
+                                <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">Use managed disks:</Label>
+                                <ComboBox Grid.Column="2" Grid.Row="2" Name="Cmb_UseManagedDisks">
+                                    <ComboBoxItem Tag="no" IsSelected="True">No</ComboBoxItem>
+                                    <ComboBoxItem Tag="yes">Yes</ComboBoxItem>
+                                </ComboBox>
+								
+                                <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">Provision additional VM:</Label>
+                                <ComboBox Grid.Column="2" Grid.Row="3" Name="Cmb_ExtraVMSize">
                                     <ComboBoxItem Tag="none" IsSelected="True">No</ComboBoxItem>
                                     <ComboBoxItem Tag="small">Small</ComboBoxItem>
                                     <ComboBoxItem Tag="medium">Medium</ComboBoxItem>
                                 </ComboBox>
 
-
-                                <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3">Provision SQL SaaS:</Label>
-                                <ComboBox Grid.Column="2" Grid.Row="3" Name="Cmb_ExtraSQLSize">
+                                <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">Provision SQL SaaS:</Label>
+                                <ComboBox Grid.Column="2" Grid.Row="4" Name="Cmb_ExtraSQLSize">
                                     <ComboBoxItem Tag="none" IsSelected="True">No</ComboBoxItem>
                                     <ComboBoxItem Tag="small">Yes</ComboBoxItem>
-
                                 </ComboBox>
 
-                                <Label Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">Provision Azure Backup Service:</Label>
-                                <ComboBox Grid.Column="2" Grid.Row="4" Name="Cmb_Backup">
+                                <Label Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2">Provision Azure Backup Service:</Label>
+                                <ComboBox Grid.Column="2" Grid.Row="5" Name="Cmb_Backup">
                                     <ComboBoxItem Tag="none" IsSelected="True">No</ComboBoxItem>
                                     <ComboBoxItem Tag="standard">Yes</ComboBoxItem>
-
                                 </ComboBox>
-                                <Label Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2">Provision VPN:</Label>
-                                <ComboBox Grid.Column="2" Grid.Row="5" Name="Cmb_VPN">
+
+                                <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2">Provision VPN:</Label>
+                                <ComboBox Grid.Column="2" Grid.Row="6" Name="Cmb_VPN">
                                     <ComboBoxItem Tag="none" IsSelected="True">No</ComboBoxItem>
                                     <ComboBoxItem Tag="basic">Yes</ComboBoxItem>
-
                                 </ComboBox>
 
-                                <!-- <CheckBox Name="Chk_AzureSQL" Margin="150,10,0,0" Content="Deploy Azure SQL database"></CheckBox>
-                            <CheckBox Name="Chk_AzureVM" Margin="150,50,0,0" Content="Deploy Extra VM"></CheckBox> -->
                             </Grid>
                         </GroupBox>
                         <GroupBox Grid.Row="1" Header="4. Location">

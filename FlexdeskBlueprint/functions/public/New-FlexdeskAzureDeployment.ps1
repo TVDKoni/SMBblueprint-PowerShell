@@ -26,6 +26,10 @@ function New-FlexdeskAzureDeployment {
 		[string] $AdditionalVMSize = 'none',
 		
 		[parameter()]
+		[ValidateSet('yes','no')]
+		[string] $UseManagedDisks = 'no',
+		
+		[parameter()]
 		[ValidateSet('none','small')]
 		[string] $AdditionalSQLInstanceSize = 'none',
 		
@@ -255,6 +259,7 @@ function New-FlexdeskAzureDeployment {
 		$AzureParameters = @{
 			customername = $CustomerNamePrefix
 			customersize = $CustomerSize
+			useManagedDisks = $UseManagedDisks
 			sql = $AdditionalSQLInstanceSize
 			vm = $AdditionalVMSize
 			backupEnabled = $Backup
